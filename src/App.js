@@ -8,38 +8,66 @@ export default function App() {
   const [mouseOver, setMouseOver] = useState(false);
   const [input, setInput] = useState('');
   const [classNameVariable, setClassNameVariable] = useState('form-control')
+  const [tasks, setTasks] = useState([])
+
+  const dataArr = ["Eating pizza", "Painting", "Playing Video Games"]
+  // const [inputValueRef] = useRef
   // const [submitted, setSubmitted] =useState(false);
   // const [lists1, setLists1] = useState('');
   // const [lists2, setLists2] = useState('');
 
-  // Validate
-  // When the form is submitted,
-  // - prevent the default event from firing
-  // - set the input value to state
-  // - check the length of the input 
-  // - if the length is greater than 2, set some text in the div
-  // - if the length if 2 or less, add text to tell the user how many characters it should be
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault()
-  //   const state = input.value
-  //     if(state.length > 2){
-  //       return setInput('')
-  //     }else{
-  //       return 'Min length is 3 characters';
-  //     }
-  // }
   const handleSubmit = (e) => {
     e.preventDefault()
     const state = input
     console.log(state)
       if(state.length > 2){
         setClassNameVariable('is-valid form-control');
-        return setInput('')
+        setInput('')
       }else{
         setClassNameVariable('is-invalid form-control');
       }
   }
+
+  // const addItem = () => {
+  //   const hobbyInput = document.querySelector('#form-hobby-text')
+  //   const addForm = document.querySelector('#form-hobby');
+  //   const hobbyList = document.querySelector('#hobby-list');
+  //   addForm.addEventListener('submit', e => {
+  //       e.preventDefault();
+  //     // hobbyInput.value
+  //     hobbyList.innerHTML += `<li className="list-group-item">${hobbyInput.value}</li>`;
+  //     hobbyInput.value = ''; 
+  //    })
+  // }
+
+  // const addItem = (e) => {
+  //       e.preventDefault();
+  //       let tasks = [];
+  //       for(let i = 0; i < tasks.length; i++) {
+  //         tasks.push(
+  //           <li className="list-group-item">${e.value}</li>
+  //         );
+  //       }
+  //       return tasks;
+  //    }
+
+// create an onsubmit
+// Create a new state: tasks
+// in on submit take the input's value and push it to the task array
+// in the div to display tasks, iterate over the array creating an <li> for each one
+  const handleTaskSubmit =  (e) => {
+    e.preventDefault();
+    setTasks([...tasks, input]);
+    setInput('')
+  }
+ 
+  
+  
+  const handleClick = (e) => {
+      e.target.parentElement.remove();
+    } 
+  
+
 
   return (
     <div className="container">
@@ -90,7 +118,7 @@ export default function App() {
                 
                 id="light-bulb"
                 className="mx-auto d-block"
-                src={mouseOver ? lightOff : lightOn}
+                src={mouseOver ? lightOn : lightOff}
                 alt="light bulb"
                 />
             </div>
@@ -117,7 +145,7 @@ export default function App() {
                 id="toggle-button"
                 type="button"
                 className="btn btn-primary btn-block"
-                on={() => setAlertToggle(!alertToggle)}
+                onClick={() => setAlertToggle(!alertToggle)}
               >
                {alertToggle ? 'Off' : 'On'}
               </button>
@@ -140,11 +168,6 @@ export default function App() {
                   <input
                     type="text"
                     id="form-validate-first-name"
-                    // {if(submitted) {
-                    //   if(validFeedback) {
-                    //     'is-valid form-control'
-                    //   }
-//clasName as a state
                     className={classNameVariable}
                     onChange={(e) => setInput(e.target.value)}
                   />
@@ -172,7 +195,7 @@ export default function App() {
               <p className="card-text">
                 When the "Add" button is clicked, add a new hobby to the list.
               </p>
-              <form id="form-hobby" className="needs-validation">
+              <form id="form-hobby" className="needs-validation" >
                 <div className="form-row">
                   <div className="col-8">
                     <input
@@ -180,17 +203,21 @@ export default function App() {
                       id="form-hobby-text"
                       className="form-control"
                       required
+                      onChange={(e) => setInput(e.target.value)}
+                      value={input}
                     />
                   </div>
                   <div className="col">
-                    <button className="btn btn-primary btn-block" type="submit">
+                    <button className="btn btn-primary btn-block" onClick={(e) => handleTaskSubmit(e)}>
                       Add
                     </button>
                   </div>
                 </div>
               </form>
               <ul id="hobby-list" className="list-group mt-3">
-                <li className="list-group-item">Eating pizza</li>
+                {tasks.map((task, index) => (
+                    <li key={index.toString()}>{task}</li>
+                  ))}
               </ul>
             </div>
           </div>
@@ -204,19 +231,13 @@ export default function App() {
                 list.
               </p>
               <ul id="hobby-list-2" className="list-group mt-3">
-                <li className="hobby list-group-item d-flex justify-content-between align-items-center">
-                  Eating pizza
-                  <button className="remove-hobby badge badge-danger">x</button>
-                </li>
 
-                <li className="hobby list-group-item d-flex justify-content-between align-items-center">
-                  Painting
-                  <button className="remove-hobby badge badge-danger">x</button>
+                {dataArr.map( (item, index) => 
+                  <li className="hobby list-group-item d-flex justify-content-between align-items-center" key={index.toString()}>
+                  {item}
+                  <button className="remove-hobby badge badge-danger" onClick={handleClick}>x</button>
                 </li>
-                <li className="hobby list-group-item d-flex justify-content-between align-items-center">
-                  Playing video games
-                  <button className="remove-hobby badge badge-danger">x</button>
-                </li>
+                )}
               </ul>
             </div>
           </div>
